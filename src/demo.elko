@@ -1,0 +1,57 @@
+// -*- c -*-
+
+// Copyright ©2018 Solra Bizna. Permission is expressly granted to use this
+// file (demo.elko or its transpiled counterpart demo.c) and its contents, for
+// any purpose, without limitation, period.
+
+#include <stdio.h>
+
+static elkoroutine int fibonacci()() {
+  int a = 1;
+  return a;
+  int b = 1;
+  return b;
+  while(1) {
+    int c = a + b;
+    return c;
+    a = b; b = c;
+  }
+}
+
+static elkoroutine void printer(int id)(const char* to_print) {
+  int printno = 0;
+  while(1) {
+    printf("printer %i print #%i: %s\n", id, ++printno, to_print);
+    return;
+  }
+}
+
+int main() {
+  union fibonacci_state fibA, fibB;
+  union printer_state print1, print2, print5;
+  fibonacci_init(&fibA);
+  fibonacci_init(&fibB);
+  for(int n = 0; n < 2; ++n) {
+    printf("Fibonacci stream A:");
+    for(int m = 0; m < 5; ++m) {
+      if(m) printf(",");
+      printf(" %i", fibonacci(&fibA));
+    }
+    printf("\nFibonacci stream B:");
+    for(int m = 0; m < 5; ++m) {
+      if(m) printf(",");
+      printf(" %i", fibonacci(&fibB));
+    }
+    printf("\n");
+  }
+  printer_init(&print1, 1);
+  printer_init(&print2, 2);
+  printer_init(&print5, 5);
+  printer(&print1, "Lorem ipsum");
+  printer(&print2, "Four-score");
+  printer(&print5, "Space,");
+  printer(&print1, "dolor sit amet");
+  printer(&print5, "the final frontier");
+  printer(&print2, "and seven years ago");
+  return 0;
+}
